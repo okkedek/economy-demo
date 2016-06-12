@@ -6,7 +6,31 @@
       <excludeFolder url="file://$MODULE_DIR$/bootstrap" />
       <excludeFolder url="file://$MODULE_DIR$/database" />
       <excludeFolder url="file://$MODULE_DIR$/storage" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/classpreloader" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dnoegel" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fzaninotto" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/hamcrest" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jakub-onderka" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jeremeamia" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/league" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/monolog" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mtdowling" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nesbot" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nikic" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psy" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/swiftmailer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/vlucas" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
