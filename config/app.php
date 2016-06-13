@@ -156,6 +156,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * prooph services
+         */
+        Monii\Interop\Container\Laravel\ServiceProvider::class,
+        Prooph\Package\ProophServiceProvider::class,
+
     ],
 
     /*
