@@ -1,27 +1,94 @@
-# Laravel PHP Framework
+# Intro
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+In contrast to the ore frontend oriented <a href="https://github.com/okkedek/voxelprinter">voxelprinter demo</a>, this application main to demonstrate backend techniques, 
+including Domain Driven Design (DDD), Command Query Responsibility Segregation (CQRS), Event Sourcings (ES), 
+microservices, API's, etc.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+## Domain
 
-## Official Documentation
+Since we'll be working with DDD, lets start out by describing our fictitious domain in terms of a _ubiquitous language_:
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+> This application models a marketplace where __consumers__ __trade__ 
+__products__ with __shops__ for __tokens__. Every shop __sells__ only a 
+single type of product with limited __stock__. Every product costs one 
+__token__. 
+Shops can only sell product after they have __opened__. If a shop runs out 
+of stock it __closes__. 
+Consumer can only buy product after they have __entered__ the marketplace
+and until the have __left__.
+ 
+## Commands, Events and Exceptions
 
-## Contributing
+Here this list of commands and events that may occur in this model:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+<table>
+<tr>
+<td>command</td>
+<td>events</td>
+<td>exceptions</td>
+</tr>
+<tr>
+<td>OpenShop</td>
+<td>ShopOpened</td>
+<td>-</td>
+</tr>
+<tr>
+<td>CloseShop</td>
+<td>ShopClosed</td>
+<td>ShopAlreadyClosed</td>
+</tr>
+<tr>
+<td>EnterMarket</td>
+<td>ConsumerEntered</td>
+<td>ConsumerAlreadyEntered</td>
+</tr>
+<tr>
+<td>LeaveMarket</td>
+<td>ConsumerLeft</td>
+<td>ConsumerNotInMarketplace</td>
+</tr>
+<tr>
+<td>TradeProductForToken</td>
+<td>ProductSold, ShopClosed</td>
+<td>ShopNotFound, ConsumerNotFound, ShopIsClosed, ShopOutOfStock, ConsumerHasInsufficientTokens</td>
+</tr>
+</table>
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+## Aggregates, ValueObjects and Entities
 
-## License
+We can identify the following object types:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+<table>
+<tr>
+<td>object</td>
+<td>type</td>
+<td>root</td>
+</tr>
+<tr>
+<td>MarketPlace</td>
+<td>AggregateRoot</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Shop</td>
+<td>Entity</td>
+<td>MarketPlace</td>
+</tr>
+<tr>
+<td>Consumer</td>
+<td>Entity</td>
+<td>MarketPlace</td>
+</tr>
+<tr>
+<td>Product</td>
+<td>ValueObject</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Token</td>
+<td>ValueObject</td>
+<td>-</td>
+</tr>
+</table>
