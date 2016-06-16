@@ -1,6 +1,6 @@
 # Intro
 
-In contrast to the ore frontend oriented <a href="https://github.com/okkedek/voxelprinter">voxelprinter demo</a>, this application main to demonstrate backend techniques, 
+In contrast to the more frontend oriented <a href="https://github.com/okkedek/voxelprinter">voxelprinter demo</a>, this application aims to demonstrate backend techniques, 
 including Domain Driven Design (DDD), Command Query Responsibility Segregation (CQRS), Event Sourcings (ES), 
 microservices, API's, etc.
 
@@ -67,7 +67,7 @@ We can identify the following object types:
 <td>root</td>
 </tr>
 <tr>
-<td>MarketPlace</td>
+<td>Marketplace</td>
 <td>AggregateRoot</td>
 <td>-</td>
 </tr>
