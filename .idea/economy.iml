@@ -17,7 +17,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/jakub-onderka" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/jeremeamia" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/mockery" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mtdowling" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nesbot" />

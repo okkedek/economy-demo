@@ -7,6 +7,9 @@
  * @license   https://github.com/prooph/laravel-package/blob/master/LICENSE.md New BSD License
  */
 // default example configuration for prooph components, see http://getprooph.org/
+use App\Model\Marketplace\Command\OpenShop;
+use App\Model\Marketplace\Handler\OpenShopHandler;
+
 return [
     'event_store' => [
         'adapter' => [
@@ -27,6 +30,7 @@ return [
             'router' => [
                 'routes' => [
                     \Prooph\Snapshotter\TakeSnapshot::class => \Prooph\Snapshotter\Snapshotter::class,
+                    OpenShop::class => OpenShopHandler::class,
                     // list of commands with corresponding command handler
                 ],
             ],

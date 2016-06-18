@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  *
  */
-namespace Domain\Model\Marketplace;
+namespace Model\Marketplace;
 
 
 use App\Model\Marketplace\Consumer;
@@ -50,7 +50,7 @@ class ConsumerTest extends PHPUnit_Framework_TestCase
         $consumer = new Consumer(Uuid::uuid4(), "TestConsumer", new Token(4));
 
         $this->setExpectedException(InsufficientTokensException::class);
-        $product = $consumer->buyFromShop($shop , 5);
+        $consumer->buyFromShop($shop , 5);
     }
 
     public function testConsumerCannotBuyMoreThanAvailable()
@@ -59,7 +59,7 @@ class ConsumerTest extends PHPUnit_Framework_TestCase
         $consumer = new Consumer(Uuid::uuid4(), "TestConsumer", new Token(8));
 
         $this->setExpectedException(OutOfStockException::class);
-        $product = $consumer->buyFromShop($shop , 8);
+        $consumer->buyFromShop($shop , 8);
     }
     
 }

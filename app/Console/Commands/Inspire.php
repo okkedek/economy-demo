@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Model\Marketplace\Command\OpenShop;
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Inspiring;
+use Prooph\ServiceBus\CommandBus;
 
 class Inspire extends Command
 {
@@ -26,8 +27,10 @@ class Inspire extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(CommandBus $bus)
     {
-        $this->comment(PHP_EOL . Inspiring::quote() . PHP_EOL);
+        $command = OpenShop::create('bike',10);
+        
+        $bus->dispatch($command);
     }
 }

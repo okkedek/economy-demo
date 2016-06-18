@@ -9,11 +9,13 @@
  *
  */
 
-namespace App\Infrastructure;
+namespace App\Infrastructure\Repository;
 
 
+use App\Model\Common\ConsumerId;
+use App\Model\Common\ShopId;
 use App\Model\Marketplace\Marketplace;
-use Domain\Repository\Marketplace\MarketplaceRepository;
+use App\Model\Marketplace\MarketplaceRepository;
 
 class MarketplaceRepositoryStub implements MarketplaceRepository
 {
@@ -30,13 +32,29 @@ class MarketplaceRepositoryStub implements MarketplaceRepository
         $this->marketplace = Marketplace::createMarketplace();
     }
 
-    public function findById($marketplaceId)
+    /**
+     * @return Marketplace
+     */
+    public function get()
     {
         return $this->marketplace;
     }
 
+    /**
+     * @param Marketplace $marketplace
+     */
     public function store(Marketplace $marketplace)
     {
         $this->marketplace = $marketplace;
+    }
+
+    public function generateNextShopId()
+    {
+        return new ShopId();
+    }
+
+    public function generateNextConsumerId()
+    {
+        return new ConsumerId();
     }
 }

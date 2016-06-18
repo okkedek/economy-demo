@@ -9,14 +9,21 @@
  *
  */
 
-namespace Domain\Repository\Marketplace;
-
-
-use App\Model\Marketplace\Marketplace;
+namespace App\Model\Marketplace;
 
 interface MarketplaceRepository
 {
-    public function findById($marketplaceId);
+    /**
+     * @return Marketplace
+     */
+    public function get();
 
+    /**
+     * @param Marketplace $marketplace
+     */
     public function store(Marketplace $marketplace);
+
+    public function generateNextShopId();
+    
+    public function generateNextConsumerId();
 }

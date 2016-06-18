@@ -11,13 +11,15 @@
 
 namespace App\Model\Marketplace;
 
+use App\Model\Marketplace\Event\ShopWasOpened;
 use App\Model\Marketplace\Exception\ConsumerNotFoundException;
 use App\Model\Marketplace\Exception\ShopNotFoundException;
 use App\Model\Common\ConsumerId;
 use App\Model\Common\ShopId;
 use Illuminate\Support\Collection;
+use Prooph\EventSourcing\AggregateRoot;
 
-final class Marketplace
+final class Marketplace extends AggregateRoot
 {
     /**
      * @var Collection
@@ -29,7 +31,7 @@ final class Marketplace
      */
     protected $shops;
 
-    private function __construct()
+    protected function __construct()
     {
         $this->consumers = new Collection();
         $this->shops = new Collection();
@@ -49,12 +51,15 @@ final class Marketplace
         $consumer->buyFromShop($shop, $amount);
     }
 
-    public function openShop($productName, $amount)
+    public function openShop($shopId, $productName, $amount)
     {
-        $shop = new Shop(new ShopId(), new Product($productName, $amount));
-        $this->shops->put((string)$shop->getId(), $shop);
+        $this->recordThat(ShopWasOpened::create($shopId, new Product($productName, $amount)));
+    }
 
-        return $shop->getId();
+    public function whenShopWasOpened(ShopWasOpened $event)
+    {
+        $shop = new Shop($event->getShopId(), $event->getProduct());
+        $this->shops->put((string)$shop->getId(), $shop);
     }
 
     public function closeShop(ShopId $shopId)
@@ -123,4 +128,11 @@ final class Marketplace
     }
 
 
+    /**
+     * @return string representation of the unique identifier of the aggregate root
+     */
+    protected function aggregateId()
+    {
+        return 'dummy';
+    }
 }

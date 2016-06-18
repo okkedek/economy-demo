@@ -9,7 +9,7 @@
  *
  */
 
-namespace Domain\Model\Marketplace;
+namespace Model\Marketplace;
 
 use App\Model\Marketplace\Exception\ConsumerNotFoundException;
 use App\Model\Marketplace\Exception\ShopNotFoundException;
@@ -23,7 +23,8 @@ class MarketplaceTest extends \PHPUnit_Framework_TestCase
     public function testMarketplaceCanOpenAndCloseAShop()
     {
         $marketplace = Marketplace::createMarketplace();
-        $shopId = $marketplace->openShop('bike', 10);
+        $shopId = new ShopId();
+        $marketplace->openShop($shopId, 'bike', 10);
         $marketplace->closeShop($shopId);
     }
 
@@ -37,7 +38,8 @@ class MarketplaceTest extends \PHPUnit_Framework_TestCase
     public function testConsumerMustBeInMarketplaceWhenBuying()
     {
         $marketplace = Marketplace::createMarketplace();
-        $shopId = $marketplace->openShop('bike', 10);
+        $shopId = new ShopId();
+        $marketplace->openShop($shopId, 'bike', 10);
 
         $this->setExpectedException(ConsumerNotFoundException::class);
         $marketplace->tradeProductForToken(new ConsumerId(), $shopId, 5);
@@ -60,7 +62,8 @@ class MarketplaceTest extends \PHPUnit_Framework_TestCase
         $marketplace->tradeProductForToken($consumerId, new ShopId(), 5);
 
         $this->setExpectedException(null);
-        $shopId = $marketplace->openShop('bike', 10);
+        $shopId = new ShopId();
+        $marketplace->openShop($shopId, 'bike', 10);
         $marketplace->tradeProductForToken($consumerId, $shopId, 5);
     }
 
@@ -68,7 +71,8 @@ class MarketplaceTest extends \PHPUnit_Framework_TestCase
     {
         $marketplace = Marketplace::createMarketplace();
         $consumerId = $marketplace->enterMarket('John', 10);
-        $shopId = $marketplace->openShop('bike', 10);
+        $shopId = new ShopId();
+        $marketplace->openShop($shopId, 'bike', 10);
 
         $marketplace->tradeProductForToken($consumerId, $shopId, 3);
 
@@ -81,8 +85,10 @@ class MarketplaceTest extends \PHPUnit_Framework_TestCase
         $marketplace = Marketplace::createMarketplace();
         $consumerJohnId = $marketplace->enterMarket('John', 10);
         $consumerMaraId = $marketplace->enterMarket('Maja', 10);
-        $bikeShopId = $marketplace->openShop('bike', 10);
-        $carShopId = $marketplace->openShop('car', 20);
+        $bikeShopId = new ShopId();
+        $carShopId = new ShopId();
+        $marketplace->openShop($bikeShopId, 'bike', 10);
+        $marketplace->openShop($carShopId, 'car', 20);
 
         $marketplace->tradeProductForToken($consumerJohnId, $bikeShopId, 5);
         $marketplace->tradeProductForToken($consumerMaraId, $carShopId, 3);

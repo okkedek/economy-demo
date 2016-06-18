@@ -9,7 +9,7 @@
  *
  */
 
-namespace Domain\Model\Marketplace;
+namespace Model\Marketplace;
 
 
 use App\Model\Marketplace\Product;

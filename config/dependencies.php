@@ -7,6 +7,8 @@
  * @license   https://github.com/prooph/laravel-package/blob/master/LICENSE.md New BSD License
  */
 
+use App\Container\Infrastructure\Repository\MarketplaceRepositoryStubFactory;
+use App\Model\Marketplace\MarketplaceRepository;
 use \Prooph\Package\Container\InvokableFactory;
 
 // list of services with callable container-interop factories
@@ -28,4 +30,5 @@ return [
     \Prooph\EventStoreBusBridge\TransactionManager::class => \Prooph\EventStoreBusBridge\Container\TransactionManagerFactory::class,
     \Prooph\EventStoreBusBridge\EventPublisher::class => \Prooph\EventStoreBusBridge\Container\EventPublisherFactory::class,
     // your factories
+    MarketplaceRepository::class => MarketplaceRepositoryStubFactory::class,
 ];

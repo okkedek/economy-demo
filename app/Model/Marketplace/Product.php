@@ -43,4 +43,13 @@ class Product
     {
         return new self($this->name, $amount);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+    
 }
