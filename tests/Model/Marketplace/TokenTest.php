@@ -15,7 +15,6 @@ use App\Model\Marketplace\Token;
 
 class TokenTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testTokenAmountCanBeSplit()
     {
         $token = new Token(10);

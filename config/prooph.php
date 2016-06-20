@@ -7,8 +7,15 @@
  * @license   https://github.com/prooph/laravel-package/blob/master/LICENSE.md New BSD License
  */
 // default example configuration for prooph components, see http://getprooph.org/
+use App\Infrastructure\Repository\EventStoreMarketplaceRepository;
+use App\Model\Marketplace\Command\AddMarketplace;
 use App\Model\Marketplace\Command\OpenShop;
+use App\Model\Marketplace\Event\ShopWasOpened;
+use App\Model\Marketplace\Handler\AddMarketplaceHandler;
 use App\Model\Marketplace\Handler\OpenShopHandler;
+use App\Model\Marketplace\Marketplace;
+use App\Model\Marketplace\MarketplaceRepository;
+use App\ReadModel\Marketplace\MarketplaceStatisticsProjector;
 
 return [
     'event_store' => [
@@ -23,6 +30,12 @@ return [
             \Prooph\EventStoreBusBridge\TransactionManager::class,
             \Prooph\Snapshotter\SnapshotPlugin::class,
         ],
+        'marketplace_repository' => [
+            'repository_class' => EventStoreMarketplaceRepository::class,
+            'aggregate_type' => Marketplace::class,
+            'aggregate_translator' => \Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator::class,
+            'snapshot_store' => \Prooph\EventStore\Snapshot\SnapshotStore::class,
+        ],
         // list of aggregate repositories
     ],
     'service_bus' => [
@@ -30,6 +43,7 @@ return [
             'router' => [
                 'routes' => [
                     \Prooph\Snapshotter\TakeSnapshot::class => \Prooph\Snapshotter\Snapshotter::class,
+                    AddMarketplace::class => AddMarketplaceHandler::class,
                     OpenShop::class => OpenShopHandler::class,
                     // list of commands with corresponding command handler
                 ],
@@ -42,6 +56,7 @@ return [
             'router' => [
                 'routes' => [
                     // list of events with a list of projectors
+                    ShopWasOpened::class => MarketplaceStatisticsProjector::class
                 ],
             ],
         ],
@@ -60,6 +75,7 @@ return [
     'snapshotter' => [
         'version_step' => 5, // every 5 events a snapshot
         'aggregate_repositories' => [
+            Marketplace::class => MarketplaceRepository::class
             // list of aggregate root => aggregate repositories
         ]
     ],

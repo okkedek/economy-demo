@@ -57,7 +57,6 @@ class Consumer
         return $this->products;
     }
 
-
     public function buyFromShop(Shop $shop, $amount)
     {
         if ($this->token->getAmount() < $amount) {
@@ -73,6 +72,7 @@ class Consumer
     public function getProductAmount()
     {
         $amount = 0;
+        
         foreach ($this->products as $product) {
             $amount += $product->getAmount();
         }
@@ -84,5 +84,4 @@ class Consumer
     {
         return $this->token->getAmount();
     }
-
 }

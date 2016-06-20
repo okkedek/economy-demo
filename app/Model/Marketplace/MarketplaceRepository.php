@@ -11,17 +11,22 @@
 
 namespace App\Model\Marketplace;
 
+use App\Model\Common\MarketplaceId;
+
 interface MarketplaceRepository
 {
     /**
+     * @param MarketplaceId $marketplaceId
      * @return Marketplace
      */
-    public function get();
+    public function get(MarketplaceId $marketplaceId);
 
     /**
      * @param Marketplace $marketplace
      */
     public function store(Marketplace $marketplace);
+
+    public function generateNextMarketplaceId();
 
     public function generateNextShopId();
     

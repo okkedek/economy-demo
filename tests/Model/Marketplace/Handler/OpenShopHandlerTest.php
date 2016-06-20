@@ -12,38 +12,35 @@
 namespace Model\Marketplace\Handler;
 
 
+use App\Model\Common\MarketplaceId;
+use App\Model\Common\ShopId;
 use App\Model\Marketplace\Command\OpenShop;
 use App\Model\Marketplace\Handler\OpenShopHandler;
+use App\Model\Marketplace\Marketplace;
 use App\Model\Marketplace\MarketplaceRepository;
-use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Contracts\Logging\Log;
+use Mockery as m;
+use TestCase;
 
 class OpenShopHandlerTest extends TestCase
 {
     public function testItHandlesTheCommand()
     {
-        /** @var MarketplaceRepository $marketplaceRepository */
-        $marketplaceRepository = $this->app->make(MarketplaceRepository::class);
-        $marketplace = $marketplaceRepository->get();
+        $randomMarketplaceId = MarketplaceId::random();
+        $repository = m::mock(MarketplaceRepository::class);
+        $repository
+            ->shouldReceive('get')->once()
+            ->andReturn(Marketplace::createMarketplace($randomMarketplaceId));
+        $repository
+            ->shouldReceive('generateNextShopId')->once()
+            ->andReturn(new ShopId());
+        $repository
+            ->shouldReceive('store')->once();
 
-        $command = OpenShop::create('bike', 10);
-        $handler = $this->app->make(OpenShopHandler::class);
+        $log = $this->app->make(Log::class);
+
+        $command = OpenShop::create($randomMarketplaceId, 'bike', 10);
+        $handler = new OpenShopHandler($repository , $log);
         $handler($command);
-
-        $this->assertEquals(10,$marketplace->getProductAmount());
-    }
-
-    /**
-     * Creates the application.
-     *
-     * Needs to be implemented by subclasses.
-     *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-     */
-    public function createApplication()
-    {
-        $app = require __DIR__.'/../../../../bootstrap/app.php';
-        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
-
-        return $app;
     }
 }

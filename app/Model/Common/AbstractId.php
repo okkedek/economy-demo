@@ -16,11 +16,11 @@ use Rhumsaa\Uuid\Uuid;
 
 class AbstractId
 {
-    private $id;
+    protected $id;
 
-    public function __construct()
+    public function __construct($uuid = null)
     {
-        $this->id = Uuid::uuid4();
+        $this->id = $uuid == null ? Uuid::uuid4() : $uuid;
     }
 
     public function getId()
@@ -31,5 +31,10 @@ class AbstractId
     public function __toString()
     {
         return (string)$this->id;
+    }
+
+    public static function fromString($uuid)
+    {
+        return new static( Uuid::fromString($uuid));
     }
 }

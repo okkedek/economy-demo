@@ -11,6 +11,8 @@
 
 namespace App\Model\Marketplace;
 
+use App\Model\Common\MarketplaceId;
+use App\Model\Marketplace\Event\MarketplaceWasAdded;
 use App\Model\Marketplace\Event\ShopWasOpened;
 use App\Model\Marketplace\Exception\ConsumerNotFoundException;
 use App\Model\Marketplace\Exception\ShopNotFoundException;
@@ -21,6 +23,11 @@ use Prooph\EventSourcing\AggregateRoot;
 
 final class Marketplace extends AggregateRoot
 {
+    /**
+     * @var MarketplaceId
+     */
+    protected $marketplaceId;
+    
     /**
      * @var Collection
      */
@@ -37,6 +44,37 @@ final class Marketplace extends AggregateRoot
         $this->shops = new Collection();
     }
 
+    /**
+     * Factory method: instantiates a new marketplace
+     * 
+     * @param MarketplaceId $marketplaceId
+     * @return Marketplace
+     */
+    public static function createMarketplace(MarketplaceId $marketplaceId)
+    {
+        $marketplace = new self();
+        $marketplace->recordThat(MarketplaceWasAdded::create($marketplaceId));
+        
+        return $marketplace;
+    }
+
+    public function whenMarketplaceWasAdded(MarketplaceWasAdded $event)
+    {
+        $this->marketplaceId = $event->getMarketplaceId();
+    }
+
+    /**
+     * Performs a transaction between a consumer and a shop. The consumer
+     * will provide tokens to the shop, for which the shop will give products
+     * in return. Every product costs one token, so the total amount of
+     * tokens + products will remain the same.
+     * 
+     * @param ConsumerId $consumerId
+     * @param ShopId $shopId
+     * @param $amount
+     * @throws ConsumerNotFoundException
+     * @throws ShopNotFoundException
+     */
     public function tradeProductForToken(ConsumerId $consumerId, ShopId $shopId, $amount)
     {
         if (!$this->consumers->has((string)$consumerId)) {
@@ -51,9 +89,16 @@ final class Marketplace extends AggregateRoot
         $consumer->buyFromShop($shop, $amount);
     }
 
+    /**
+     * Adds a shop to the marketplace
+     * 
+     * @param $shopId
+     * @param $productName
+     * @param $amount
+     */
     public function openShop($shopId, $productName, $amount)
     {
-        $this->recordThat(ShopWasOpened::create($shopId, new Product($productName, $amount)));
+        $this->recordThat(ShopWasOpened::create($this->marketplaceId, $shopId, new Product($productName, $amount)));
     }
 
     public function whenShopWasOpened(ShopWasOpened $event)
@@ -62,6 +107,11 @@ final class Marketplace extends AggregateRoot
         $this->shops->put((string)$shop->getId(), $shop);
     }
 
+    /**
+     * Closes a shop
+     * 
+     * @param ShopId $shopId
+     */
     public function closeShop(ShopId $shopId)
     {
         $shop = $this->shops->get((string)$shopId);
@@ -69,6 +119,13 @@ final class Marketplace extends AggregateRoot
         $this->shops->forget((string)$shopId);
     }
 
+    /**
+     * Lets a consumer enter the marketplace
+     * 
+     * @param $consumerName
+     * @param $tokenAmount
+     * @return mixed
+     */
     public function enterMarket($consumerName, $tokenAmount)
     {
         $consumer = new Consumer(new ConsumerId(), $consumerName, new Token($tokenAmount));
@@ -77,14 +134,14 @@ final class Marketplace extends AggregateRoot
         return $consumer->getId();
     }
 
+    /**
+     * Lets a consumer leave the marketplace
+     * 
+     * @param ConsumerId $consumerId
+     */
     public function leaveMarket(ConsumerId $consumerId)
     {
         $this->consumers->forget((string)$consumerId);
-    }
-
-    public static function createMarketplace()
-    {
-        return new self();
     }
 
     /**
@@ -127,12 +184,11 @@ final class Marketplace extends AggregateRoot
         return $totalProduct;
     }
 
-
     /**
      * @return string representation of the unique identifier of the aggregate root
      */
     protected function aggregateId()
     {
-        return 'dummy';
+        return (string)$this->marketplaceId;
     }
 }

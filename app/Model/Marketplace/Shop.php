@@ -11,7 +11,7 @@
 
 namespace App\Model\Marketplace;
 
-
+use App\Model\Marketplace\Exception\InsufficientAmountException;
 use App\Model\Marketplace\Exception\OutOfStockException;
 
 class Shop
@@ -53,23 +53,25 @@ class Shop
     }
 
     /**
+     * Sells product for the given amount of tokens. Every product costs one token. 
+     * 
      * @param Token $token
      * @return Product
-     * @throws OutOfStockException
+     * @throws OutOfStockException when more tokens were provided than product is available
      */
     public function sellFor(Token $token)
     {
-        $amount = $token->getAmount();
+        try {
+            $amount = $token->getAmount();
+            $sold = $this->product->take($amount);
 
-        if ($amount > $this->product->getAmount()) {
-            throw new OutOfStockException();
+            $this->token = $this->token->add($amount);
+            $this->product = $this->product->substract($amount);
+            
+            return $sold;
+        } catch (InsufficientAmountException $e) {
+            throw new OutOfStockException("Out of stock", 0, $e);
         }
-
-        $sold = $this->product->take($amount);
-        $this->token = $this->token->add($amount);
-        $this->product = $this->product->substract($amount);
-
-        return $sold;
     }
 
     public function isClosed()

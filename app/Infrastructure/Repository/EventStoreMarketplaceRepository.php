@@ -8,38 +8,23 @@
  * file that was distributed with this source code.
  *
  */
-
 namespace App\Infrastructure\Repository;
 
-
-use App\Model\Common\ConsumerId;
 use App\Model\Common\MarketplaceId;
 use App\Model\Common\ShopId;
 use App\Model\Marketplace\Marketplace;
 use App\Model\Marketplace\MarketplaceRepository;
+use Prooph\EventStore\Aggregate\AggregateRepository;
 
-class MarketplaceRepositoryStub implements MarketplaceRepository
+class EventStoreMarketplaceRepository extends AggregateRepository implements MarketplaceRepository
 {
-    /**
-     * @var Marketplace
-     */
-    private $marketplace;
-
-    /**
-     * MarketplaceRepositoryStub constructor.
-     */
-    public function __construct()
-    {
-        $this->marketplace = Marketplace::createMarketplace(MarketplaceId::theOnlyOne());
-    }
-
     /**
      * @param MarketplaceId $marketplaceId
      * @return Marketplace
      */
     public function get(MarketplaceId $marketplaceId)
     {
-        return $this->marketplace;
+        return $this->getAggregateRoot((string)$marketplaceId);
     }
 
     /**
@@ -47,7 +32,7 @@ class MarketplaceRepositoryStub implements MarketplaceRepository
      */
     public function store(Marketplace $marketplace)
     {
-        $this->marketplace = $marketplace;
+        $this->addAggregateRoot($marketplace);
     }
 
     public function generateNextShopId()
@@ -55,13 +40,13 @@ class MarketplaceRepositoryStub implements MarketplaceRepository
         return new ShopId();
     }
 
-    public function generateNextConsumerId()
-    {
-        return new ConsumerId();
-    }
-
     public function generateNextMarketplaceId()
     {
-        return new MarketplaceId();
+        throw new \RuntimeException("Not implemented yet");
+    }
+
+    public function generateNextConsumerId()
+    {
+        throw new \RuntimeException("Not implemented yet");
     }
 }

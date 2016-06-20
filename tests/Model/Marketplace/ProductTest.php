@@ -11,15 +11,13 @@
 
 namespace Model\Marketplace;
 
-
 use App\Model\Marketplace\Product;
 
 class ProductTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testProductAmountCanBeSplit()
+   public function testProductAmountCanBeSplit()
     {
-        $product = new Product("ananas",10);
+        $product = new Product("ananas", 10);
         $part = $product->take(3);
         $remainder = $product->substract(3);
 

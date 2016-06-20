@@ -12,13 +12,14 @@
 namespace Model\Marketplace\Command;
 
 
+use App\Model\Common\MarketplaceId;
 use App\Model\Marketplace\Command\OpenShop;
 
 class OpenShopCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testCommandStoresPayload()
     {
-        $command = OpenShop::create('bike', 10);
+        $command = OpenShop::create(MarketplaceId::random(), 'bike', 10);
 
         $this->assertEquals('bike', $command->getProductName());
         $this->assertEquals(10, $command->getProductAmount());

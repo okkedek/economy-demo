@@ -2,35 +2,40 @@
 
 namespace App\Console\Commands;
 
+use App\Model\Common\MarketplaceId;
+use App\Model\Marketplace\Command\AddMarketplace;
 use App\Model\Marketplace\Command\OpenShop;
 use Illuminate\Console\Command;
 use Prooph\ServiceBus\CommandBus;
 
-class Inspire extends Command
+class Economy extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'inspire';
+    protected $signature = 'economy';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Display an inspiring quote';
+    protected $description = 'Runs the economy';
 
     /**
      * Execute the console command.
      *
+     * @param CommandBus $bus
      * @return mixed
      */
     public function handle(CommandBus $bus)
     {
-        $command = OpenShop::create('bike',10);
-        
+        $command = AddMarketplace::create();
+        $bus->dispatch($command);
+
+        $command = OpenShop::create(MarketplaceId::theOnlyOne(), 'bike', 10);
         $bus->dispatch($command);
     }
 }

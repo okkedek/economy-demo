@@ -21,13 +21,19 @@ final class OpenShop extends Command implements PayloadConstructable
     use PayloadTrait;
 
     /**
+     * @param $marketplaceId
      * @param $productName
      * @param $productAmount
      * @return OpenShop
      */
-    public static function create($productName, $productAmount)
+    public static function create($marketplaceId, $productName, $productAmount)
     {
-        return new self(compact('productName', 'productAmount'));
+        return new self(compact('marketplaceId', 'productName', 'productAmount'));
+    }
+
+    public function getMarketplaceId()
+    {
+        return $this->payload['marketplaceId'];
     }
 
     public function getProductName()

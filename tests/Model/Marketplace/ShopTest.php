@@ -21,10 +21,9 @@ class ShopTest extends \PHPUnit_Framework_TestCase
 {
     public function testShopCanSell()
     {
-        $shop = new Shop(Uuid::uuid4(), new Product("bikes" , 8));
+        $shop = new Shop(Uuid::uuid4(), new Product("bikes", 8));
         $product = $shop->sellFor(new Token(2));
 
-        $this->assertEquals(new Product('bikes',2), $product);
-
+        $this->assertEquals(new Product('bikes', 2), $product);
     }
 }

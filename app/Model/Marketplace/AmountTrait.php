@@ -20,19 +20,16 @@ trait AmountTrait
 
     public function take($amount)
     {
-        if ($this->amount < $amount) {
-            throw new InsufficientAmountException();
-        }
-
+        $this->guardMaximumAmount($amount);
+        
         return $this->getWithAmount($amount);
     }
 
     public function substract($amount)
     {
-        if ($this->amount >= $amount) {
+        $this->guardMaximumAmount($amount);
 
-            return $this->getWithAmount($this->amount - $amount);
-        }
+        return $this->getWithAmount($this->amount - $amount);
     }
 
     public function add($amount)
@@ -40,10 +37,22 @@ trait AmountTrait
         return $this->getWithAmount($this->amount + $amount);
     }
 
-
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * Guards that no more amount is requested than is available 
+     * 
+     * @param $amount
+     * @throws InsufficientAmountException
+     */
+    protected function guardMaximumAmount($amount)
+    {
+        if ($this->amount < $amount) {
+            throw new InsufficientAmountException();
+        }
     }
 
     public abstract function getWithAmount($amount);
