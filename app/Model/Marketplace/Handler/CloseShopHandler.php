@@ -11,18 +11,17 @@
 
 namespace App\Model\Marketplace\Handler;
 
-use App\Model\Marketplace\Command\OpenShop;
+use App\Model\Marketplace\Command\CloseShop;
 
-class OpenShopHandler extends BaseHandler
+class CloseShopHandler extends BaseHandler
 {
-    public function __invoke(OpenShop $command)
+    public function __invoke(CloseShop $command)
     {
         $marketplaceId = $command->getMarketplaceId();
         $shopId        = $command->getShopId();
         $marketplace   = $this->load($marketplaceId);
-        $marketplace->openShop($shopId, $command->getProductName(), $command->getProductAmount());
+        $marketplace->closeShop($shopId);
 
         $this->store($marketplace);
-
     }
 }

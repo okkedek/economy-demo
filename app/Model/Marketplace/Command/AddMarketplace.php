@@ -24,5 +24,6 @@ final class AddMarketplace extends Command implements PayloadConstructable
      */
     public static function create()
     {
+        return new self([]);
     }
 }

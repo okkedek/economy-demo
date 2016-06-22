@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Model\Common\MarketplaceId;
+use App\Model\Common\ShopId;
 use App\Model\Marketplace\Command\AddMarketplace;
+use App\Model\Marketplace\Command\CloseShop;
 use App\Model\Marketplace\Command\OpenShop;
 use Illuminate\Console\Command;
 use Prooph\ServiceBus\CommandBus;
@@ -35,7 +37,11 @@ class Economy extends Command
         $command = AddMarketplace::create();
         $bus->dispatch($command);
 
-        $command = OpenShop::create(MarketplaceId::theOnlyOne(), 'bike', 10);
+        $shopId = new ShopId();
+        $command = OpenShop::create(MarketplaceId::theOnlyOne(), $shopId, 'bike', 10);
+        $bus->dispatch($command);
+
+        $command = CloseShop::create(MarketplaceId::theOnlyOne(), $shopId);
         $bus->dispatch($command);
     }
 }

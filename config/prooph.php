@@ -9,9 +9,13 @@
 // default example configuration for prooph components, see http://getprooph.org/
 use App\Infrastructure\Repository\EventStoreMarketplaceRepository;
 use App\Model\Marketplace\Command\AddMarketplace;
+use App\Model\Marketplace\Command\CloseShop;
 use App\Model\Marketplace\Command\OpenShop;
+use App\Model\Marketplace\Event\MarketplaceWasAdded;
+use App\Model\Marketplace\Event\ShopWasClosed;
 use App\Model\Marketplace\Event\ShopWasOpened;
 use App\Model\Marketplace\Handler\AddMarketplaceHandler;
+use App\Model\Marketplace\Handler\CloseShopHandler;
 use App\Model\Marketplace\Handler\OpenShopHandler;
 use App\Model\Marketplace\Marketplace;
 use App\Model\Marketplace\MarketplaceRepository;
@@ -45,6 +49,7 @@ return [
                     \Prooph\Snapshotter\TakeSnapshot::class => \Prooph\Snapshotter\Snapshotter::class,
                     AddMarketplace::class => AddMarketplaceHandler::class,
                     OpenShop::class => OpenShopHandler::class,
+                    CloseShop::class => CloseShopHandler::class,
                     // list of commands with corresponding command handler
                 ],
             ],
@@ -56,7 +61,9 @@ return [
             'router' => [
                 'routes' => [
                     // list of events with a list of projectors
-                    ShopWasOpened::class => MarketplaceStatisticsProjector::class
+                    MarketplaceWasAdded::class => MarketplaceStatisticsProjector::class,
+                    ShopWasOpened::class => MarketplaceStatisticsProjector::class,
+                    ShopWasClosed::class => MarketplaceStatisticsProjector::class,
                 ],
             ],
         ],

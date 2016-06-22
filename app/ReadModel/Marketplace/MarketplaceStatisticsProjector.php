@@ -12,6 +12,8 @@
 namespace App\ReadModel\Marketplace;
 
 
+use App\Model\Marketplace\Event\MarketplaceWasAdded;
+use App\Model\Marketplace\Event\ShopWasClosed;
 use App\Model\Marketplace\Event\ShopWasOpened;
 use Illuminate\Database\Connection;
 
@@ -21,7 +23,7 @@ class MarketplaceStatisticsProjector
      * @var Connection
      */
     private $connection;
-    
+
     /** @var MarketplaceStatistics */
     private $statistics;
 
@@ -31,25 +33,37 @@ class MarketplaceStatisticsProjector
         $this->statistics = $statistics;
     }
 
+    public function onMarketplaceWasAdded(MarketplaceWasAdded $event)
+    {
+        $this->connection
+            ->table(MarketplaceStatistics::TABLE)
+            ->insert([
+                'aggregate_id' => (string)$event->getMarketplaceId(),
+                'shops_count' => 0,
+            ]);
+    }
+
     public function onShopWasOpened(ShopWasOpened $event)
     {
         $stat = $this->statistics->findById($event->getMarketplaceId());
 
-        if (!$stat) {
-            $this->connection
-                ->table(MarketplaceStatistics::TABLE)
-                ->insert([
-                    'aggregate_id' => (string)$event->getMarketplaceId(),
-                    'shops_count' => 1,
-                ]);
-        } else {
-            $this->connection
-                ->table(MarketplaceStatistics::TABLE)
-                ->update([
-                    'aggregate_id' => (string)$event->getMarketplaceId(),
-                    'shops_count' => $stat->shops_count + 1,
-                ]);
+        $this->updateShopsCount($event->getMarketplaceId(), $stat->shops_count + 1);
+    }
 
-        }
+    public function onShopWasClosed(ShopWasClosed $event)
+    {
+        $stat = $this->statistics->findById($event->getMarketplaceId());
+
+        $this->updateShopsCount($event->getMarketplaceId(), $stat->shops_count - 1);
+    }
+
+    protected function updateShopsCount($aggregateId, $value)
+    {
+        $this->connection
+            ->table(MarketplaceStatistics::TABLE)
+            ->update([
+                'aggregate_id' => $aggregateId,
+                'shops_count' => $value,
+            ]);
     }
 }

@@ -13,6 +13,7 @@ namespace App\Model\Marketplace;
 
 use App\Model\Common\MarketplaceId;
 use App\Model\Marketplace\Event\MarketplaceWasAdded;
+use App\Model\Marketplace\Event\ShopWasClosed;
 use App\Model\Marketplace\Event\ShopWasOpened;
 use App\Model\Marketplace\Exception\ConsumerNotFoundException;
 use App\Model\Marketplace\Exception\ShopNotFoundException;
@@ -114,10 +115,16 @@ final class Marketplace extends AggregateRoot
      */
     public function closeShop(ShopId $shopId)
     {
-        $shop = $this->shops->get((string)$shopId);
-        $shop->close();
-        $this->shops->forget((string)$shopId);
+        $this->recordThat(ShopWasClosed::create($this->marketplaceId, $shopId));
     }
+
+    public function whenShopWasClosed(ShopWasClosed $event)
+    {
+        $shopId = (string)$event->getShopId();
+        $shop   = $this->shops->get($shopId);
+        $shop->close();
+        $this->shops->forget($shopId);
+    }    
 
     /**
      * Lets a consumer enter the marketplace

@@ -14,17 +14,10 @@ namespace App\Model\Marketplace\Handler;
 use App\Model\Common\MarketplaceId;
 use App\Model\Marketplace\Command\AddMarketplace;
 use App\Model\Marketplace\Marketplace;
-use App\Model\Marketplace\MarketplaceRepository;
-use Illuminate\Contracts\Logging\Log;
 
-class AddMarketplaceHandler
+class AddMarketplaceHandler extends BaseHandler
 {
-    private $marketplaceRepository;
-    
-    public function __construct(MarketplaceRepository $marketplaceRepository, Log $log)
-    {
-        $this->marketplaceRepository = $marketplaceRepository;
-    }
+
 
     /**
      * Adds theOnlyOne marketplace if it doesn't exist yet
@@ -34,12 +27,11 @@ class AddMarketplaceHandler
     public function __invoke(AddMarketplace $command)
     {
         $marketplaceId = MarketplaceId::theOnlyOne();
-        $marketplace   = $this->marketplaceRepository->get($marketplaceId);
-
+        $marketplace   = $this->load($marketplaceId);
         if ($marketplace == null) {
             $marketplace = Marketplace::createMarketplace($marketplaceId);
         }
         
-        $this->marketplaceRepository->store($marketplace);
+        $this->store($marketplace);
     }
 }

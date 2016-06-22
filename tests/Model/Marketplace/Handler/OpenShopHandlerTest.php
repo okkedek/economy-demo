@@ -32,14 +32,11 @@ class OpenShopHandlerTest extends TestCase
             ->shouldReceive('get')->once()
             ->andReturn(Marketplace::createMarketplace($randomMarketplaceId));
         $repository
-            ->shouldReceive('generateNextShopId')->once()
-            ->andReturn(new ShopId());
-        $repository
             ->shouldReceive('store')->once();
 
         $log = $this->app->make(Log::class);
 
-        $command = OpenShop::create($randomMarketplaceId, 'bike', 10);
+        $command = OpenShop::create($randomMarketplaceId, new ShopId(), 'bike', 10);
         $handler = new OpenShopHandler($repository , $log);
         $handler($command);
     }

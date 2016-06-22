@@ -16,34 +16,23 @@ use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\PayloadConstructable;
 use Prooph\Common\Messaging\PayloadTrait;
 
-final class OpenShop extends Command implements PayloadConstructable
+final class CloseShop extends Command implements PayloadConstructable
 {
     use PayloadTrait;
 
     /**
      * @param $marketplaceId
-     * @param $productName
-     * @param $productAmount
+     * @param $shopId
      * @return OpenShop
      */
-    public static function create($marketplaceId, $shopId, $productName, $productAmount)
+    public static function create($marketplaceId, $shopId)
     {
-        return new self(compact('marketplaceId', 'shopId', 'productName', 'productAmount'));
+        return new self(compact('marketplaceId', 'shopId'));
     }
 
     public function getMarketplaceId()
     {
         return $this->payload['marketplaceId'];
-    }
-
-    public function getProductName()
-    {
-        return $this->payload['productName'];
-    }
-
-    public function getProductAmount()
-    {
-        return $this->payload['productAmount'];
     }
 
     public function getShopId()
